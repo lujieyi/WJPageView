@@ -24,7 +24,7 @@ import UIKit
         }
     }
     
-    var indicatorPadding = UIEdgeInsets(top: 5, left: 0, bottom: 2, right: 0) {
+    var indicatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0) {
         didSet {
             self.setNeedsLayout()
         }
@@ -78,14 +78,14 @@ import UIKit
         let buttonSize = self.button.intrinsicContentSize
         let indicatorSize = self.resetIndicatorSize()
         self.button.frame = CGRect(origin: .zero, size: buttonSize)
-        self.indicatorView.frame = CGRect(origin: CGPoint(x: (buttonSize.width-indicatorSize.width)/2.0, y: buttonSize.height+self.indicatorPadding.top), size: indicatorSize)
+        self.indicatorView.frame = CGRect(origin: CGPoint(x: (buttonSize.width-indicatorSize.width)/2.0+self.indicatorInset.left-self.indicatorInset.right, y: buttonSize.height+self.indicatorInset.top), size: indicatorSize)
         self.indicatorView.layer.cornerRadius = indicatorSize.height/2.0
     }
     
     override var intrinsicContentSize: CGSize {
         let buttonSize = self.button.intrinsicContentSize
         let indicatorSize = self.resetIndicatorSize()
-        let height = buttonSize.height + self.indicatorPadding.top + indicatorSize.height + self.indicatorPadding.bottom
+        let height = buttonSize.height + self.indicatorInset.top + indicatorSize.height + self.indicatorInset.bottom
         return CGSize(width: buttonSize.width, height: height)
     }
     

@@ -20,11 +20,14 @@ import UIKit
     
     var itemsAlignLeft: Bool = true
     
-    var selectedIndex: Int! {
-        didSet(newValue) {
-            if newValue>=0 && newValue<self.items.count {
-                self.items[newValue].isSelected = true
-                self.selectedItem = self.items[newValue]
+    var selectedIndex: Int = 0 {
+        didSet {
+            if selectedIndex>=0 && selectedIndex<self.items.count {
+                self.items[selectedIndex].isSelected = true
+                self.selectedItem = self.items[selectedIndex]
+                if oldValue > 0 && oldValue < self.items.count && (oldValue != selectedIndex) {
+                    self.items[oldValue].isSelected = false
+                }
             }
         }
     }
@@ -56,7 +59,6 @@ import UIKit
     init(items: [SegmentItem]) {
         super.init(frame: .zero)
         self.items = items
-        self.selectedIndex = 0
         self.addSubview(self.collectionView)
     }
     
@@ -129,10 +131,10 @@ extension WJSegmentView: UICollectionViewDelegateFlowLayout, UICollectionViewDat
         currentItem.isSelected = true
         self.selectedIndex = indexPath.row
         self.selectedItem = currentItem
-        self.updateIndicator()
+        self.updateIndicatorPosition()
     }
     
-    private func updateIndicator() {
+    private func updateIndicatorPosition() {
 //        let newX = self.selectedItem.convert(self.selectedItem.frame, to: self).minX + (self.selectedItem.frame.width - setting.indicatorSize.width)/2.0
 //        var newFrame = self.indicatorView.frame
 //        newFrame.origin.x = newX
