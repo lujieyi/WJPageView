@@ -14,13 +14,16 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.addSubview(self.segmentView)
+        _ = self.segmentView
+        self.view.addSubview(self.pageView)
+//        self.view.addSubview(self.segmentView)
     }
     
-    var segmentView: WJSegmentView = {
-        let titles = ["首页","我的","房地产","商业","财经","新闻","美丽中国","科技","工业","数据"]
+    let titles = ["首页","我的","房地产","商业","财经","新闻","美丽中国","科技","工业","数据"]
+    
+    lazy var segmentView: WJSegmentView = {
         var items = [SegmentItem]()
-        for title in titles {
+        for title in self.titles {
             let button = WJButton(titlePosition: .bottom, contentSpacing: 0)
             button.setTitle(title, for: .normal)
             if title.count > 2{
@@ -42,12 +45,28 @@ class ViewController: UIViewController {
         let segmentView = WJSegmentView(items: items)
         segmentView.selectedIndex = 1
         segmentView.backgroundColor = UIColor.lightGray
+        self.pageView = WJPageView(items: items, views: self.views)
+        self.pageView.detailView.backgroundColor = UIColor.gray
         return segmentView
     }()
     
+    lazy var views: [UIView] = {
+        var views = [UIView]()
+        for i in 0..<self.titles.count {
+            views.append(UIView(frame: .zero))
+        }
+        return views
+    }()
+    
+    var pageView: WJPageView!
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        segmentView.frame = CGRect(origin: CGPoint(x: 0, y: 50), size: CGSize(width: self.view.bounds.width, height: segmentView.intrinsicContentSize.height))
+//        segmentView.frame = CGRect(origin: CGPoint(x: 0, y: 50), size: CGSize(width: self.view.bounds.width, height: segmentView.intrinsicContentSize.height))
+        var frame = self.view.bounds
+        frame.size.height -= 50
+        frame.origin.y = 50
+        self.pageView.frame = frame
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

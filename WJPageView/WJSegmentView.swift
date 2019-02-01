@@ -18,7 +18,7 @@ import UIKit
     
     var itemForIndex:((UInt) -> SegmentItem?)?
     
-    var itemsAlignLeft: Bool = true
+//    var itemsAlignLeft: Bool = true
     
     var selectedIndex: Int = 0 {
         didSet {
