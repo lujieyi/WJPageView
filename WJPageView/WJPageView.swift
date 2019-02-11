@@ -17,11 +17,11 @@ class WJPageView: UIView {
     
     var scrollDirection: UICollectionView.ScrollDirection = .horizontal
     
-    var isSeparated: Bool = false
+    var isJointed: Bool = false
 
-    var selectedIndex: UInt! = 0 {
-        didSet {
-            
+    var selectedIndex: Int = 0 {
+        willSet {
+            self.segmentView?.selectedIndex = newValue
         }
     }
     
@@ -33,6 +33,7 @@ class WJPageView: UIView {
         let collectionView = UICollectionView.init(frame: .zero, collectionViewLayout: self.flowLayout)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.isPagingEnabled = true
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: detailViewCellReuseID)
@@ -47,31 +48,35 @@ class WJPageView: UIView {
         return flowLayout
     }()
 
-    convenience init(items: [SegmentItem], views: [UIView]) {
-        assert(items.count == views.count && items.count != 0, "titles.count != viewControllers.count 或者 titles.count == 0")
-        let segmentView = WJSegmentView(items: items)
-        self.init(segmentView: segmentView, views: views)
-    }
-    
-    init(segmentView: WJSegmentView?, views: [UIView]) {
-        if segmentView != nil {
-            assert(segmentView!.items.count == views.count && segmentView!.items.count != 0, "titles.count != viewControllers.count 或者 titles.count == 0")
-            self.segmentView = segmentView
-            self.segmentView!.flowLayout.scrollDirection = self.scrollDirection
-        }
+    init(items: [SegmentItem], views: [UIView]) {
         self.views = views
         super.init(frame: .zero)
-        self.addSubview(self.detailView)
-        self.addSubview(self.segmentView!)
+        let segmentView = WJSegmentView(items: items)
+        self.setupPageView(segmentView: segmentView, views: views)
+    }
+    
+    init(disjointedSegmentView: WJSegmentView, views: [UIView]) {
+        self.views = views
+        super.init(frame: .zero)
+        self.isJointed = true
+        self.setupPageView(segmentView: disjointedSegmentView, views: views)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func setupPageView(segmentView: WJSegmentView, views: [UIView]) {
+        assert(segmentView.items.count == views.count && segmentView.items.count != 0, "titles.count != viewControllers.count 或者 titles.count == 0")
+        self.segmentView = segmentView
+        self.segmentView!.flowLayout.scrollDirection = self.scrollDirection
+        self.addSubview(self.detailView)
+        self.addSubview(self.segmentView!)
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
-        if self.isSeparated {
+        if self.isJointed {
             self.detailView.frame = self.bounds
         } else {
             if self.scrollDirection == .horizontal {
@@ -104,7 +109,7 @@ extension WJPageView: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: detailViewCellReuseID, for: indexPath)
-        cell.backgroundColor = UIColor.blue
+        cell.backgroundColor = UIColor(red: CGFloat(Double(arc4random_uniform(256))/255.0), green: CGFloat(Double(arc4random_uniform(256))/255.0), blue: CGFloat(Double(arc4random_uniform(256))/255.0), alpha: 1.0)
         return cell
     }
     

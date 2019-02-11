@@ -23,11 +23,11 @@ import UIKit
     var selectedIndex: Int = 0 {
         didSet {
             if selectedIndex>=0 && selectedIndex<self.items.count {
-                self.items[selectedIndex].isSelected = true
-                self.selectedItem = self.items[selectedIndex]
                 if oldValue > 0 && oldValue < self.items.count && (oldValue != selectedIndex) {
                     self.items[oldValue].isSelected = false
                 }
+                self.items[selectedIndex].isSelected = true
+                self.selectedItem = self.items[selectedIndex]
             }
         }
     }
@@ -78,6 +78,9 @@ import UIKit
             maxHeight = maxHeight > intrinsicSize.height ? maxHeight : intrinsicSize.height
         }
         selfHeight = maxHeight
+        for item in self.items {
+            item.maxHeight = maxHeight
+        }
         return CGSize(width: selfWidth, height: selfHeight)
     }
     
@@ -99,15 +102,14 @@ extension WJSegmentView: UICollectionViewDelegateFlowLayout, UICollectionViewDat
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WJSegmentItemReUsedID, for: indexPath)
         let item = self.items[indexPath.row]
-        cell.addSubview(item)
-        let size = self.items[indexPath.row].intrinsicContentSize
+        cell.contentView.addSubview(item)
+        let size = self.getItemSize(indexPath: indexPath)
         item.frame = CGRect(origin: CGPoint.zero, size: size)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let size = self.items[indexPath.row].intrinsicContentSize
-        return size
+        return self.getItemSize(indexPath: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -115,7 +117,6 @@ extension WJSegmentView: UICollectionViewDelegateFlowLayout, UICollectionViewDat
         if self.didSelectItem != nil {
             self.didSelectItem!(indexPath.row)
         }
-        collectionView.deselectItem(at: indexPath, animated: false)
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
@@ -125,13 +126,14 @@ extension WJSegmentView: UICollectionViewDelegateFlowLayout, UICollectionViewDat
     }
     
     func setSelctedState(indexPath: IndexPath) {
-        let previousItem = self.items[self.selectedIndex]
-        let currentItem = self.items[indexPath.row]
-        previousItem.isSelected = false
-        currentItem.isSelected = true
         self.selectedIndex = indexPath.row
-        self.selectedItem = currentItem
         self.updateIndicatorPosition()
+    }
+    
+    private func getItemSize(indexPath: IndexPath) -> CGSize {
+        let item = self.items[indexPath.row]
+        let itemSize = CGSize(width:item.intrinsicContentSize.width, height:item.maxHeight)
+        return itemSize
     }
     
     private func updateIndicatorPosition() {

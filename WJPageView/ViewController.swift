@@ -19,9 +19,9 @@ class ViewController: UIViewController {
 //        self.view.addSubview(self.segmentView)
     }
     
-    let titles = ["首页","我的","房地产","商业","财经","新闻","美丽中国","科技","工业","数据"]
+    let titles = ["首页","我的","房地产","商业","","新闻","美丽中国","科技","工业","数据"]
     
-    lazy var segmentView: WJSegmentView = {
+    lazy var items: [SegmentItem] = {
         var items = [SegmentItem]()
         for title in self.titles {
             let button = WJButton(titlePosition: .bottom, contentSpacing: 0)
@@ -30,23 +30,26 @@ class ViewController: UIViewController {
                 button.setImage(UIImage(named: "sort-up"), for: .normal)
                 button.position = .left
                 button.contentSpacing = 3
+            } else if title.count == 0 {
+                button.setImage(UIImage(named: "sort-up"), for: .normal)
             }
             button.setTitleColor(UIColor.red, for: .normal)
             button.setTitleColor(UIColor.blue, for: .selected)
             button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 0, right: 10)
             button.isHighlighted = false
-            button.useIntrinsicSize = true
             button.isUserInteractionEnabled = false
             let item = SegmentItem(button: button, indicator: nil)
             item.indicatorView.backgroundColor = UIColor.blue
             item.indicatorInset = UIEdgeInsets(top: 2, left: 0, bottom: 1, right: 0)
             items.append(item)
         }
-        let segmentView = WJSegmentView(items: items)
-        segmentView.selectedIndex = 1
+        return items
+    }()
+    
+    lazy var segmentView: WJSegmentView = {
+        let segmentView = WJSegmentView(items: self.items)
+        segmentView.selectedIndex = 2
         segmentView.backgroundColor = UIColor.lightGray
-        self.pageView = WJPageView(items: items, views: self.views)
-        self.pageView.detailView.backgroundColor = UIColor.gray
         return segmentView
     }()
     
@@ -58,7 +61,11 @@ class ViewController: UIViewController {
         return views
     }()
     
-    var pageView: WJPageView!
+    lazy var pageView: WJPageView = {
+        let pageView = WJPageView(items: self.items, views: self.views)
+        pageView.detailView.backgroundColor = UIColor.gray
+        return pageView
+    }()
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()

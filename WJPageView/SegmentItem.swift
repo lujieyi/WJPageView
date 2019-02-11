@@ -54,6 +54,12 @@ import UIKit
         }
     }
     
+    var maxHeight: CGFloat = 0 {
+        didSet {
+            self.setNeedsLayout()
+        }
+    }
+    
     init(button: WJButton, indicator: UIImageView?) {
         self.button = button
         if indicator == nil {
@@ -75,21 +81,25 @@ import UIKit
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let buttonSize = self.button.intrinsicContentSize
-        let indicatorSize = self.resetIndicatorSize()
+        var buttonSize = self.button.intrinsicContentSize
+        let maxButtonHeight = self.maxHeight-indicatorInset.top-self.indicatorSize().height-indicatorInset.bottom
+        if buttonSize.height < maxButtonHeight {
+            buttonSize = CGSize(width: buttonSize.width, height: maxButtonHeight)
+        }
+        let indicatorSize = self.indicatorSize()
         self.button.frame = CGRect(origin: .zero, size: buttonSize)
-        self.indicatorView.frame = CGRect(origin: CGPoint(x: (buttonSize.width-indicatorSize.width)/2.0+self.indicatorInset.left-self.indicatorInset.right, y: buttonSize.height+self.indicatorInset.top), size: indicatorSize)
+        self.indicatorView.frame = CGRect(origin: CGPoint(x: (buttonSize.width-indicatorSize.width)/2.0+self.indicatorInset.left-self.indicatorInset.right, y: maxHeight-indicatorInset.bottom-indicatorSize.height), size: indicatorSize)
         self.indicatorView.layer.cornerRadius = indicatorSize.height/2.0
     }
     
     override var intrinsicContentSize: CGSize {
         let buttonSize = self.button.intrinsicContentSize
-        let indicatorSize = self.resetIndicatorSize()
+        let indicatorSize = self.indicatorSize()
         let height = buttonSize.height + self.indicatorInset.top + indicatorSize.height + self.indicatorInset.bottom
         return CGSize(width: buttonSize.width, height: height)
     }
     
-    private func resetIndicatorSize() -> CGSize {
+    private func indicatorSize() -> CGSize {
         let buttonSize = self.button.intrinsicContentSize
         var indicatorSize = self.indicatorView.image == nil ? self.defaultIndicatorSize : self.indicatorView.image!.size
         if indicatorSize.width > buttonSize.width {
