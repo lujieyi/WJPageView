@@ -14,9 +14,8 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        _ = self.segmentView
         self.view.addSubview(self.pageView)
-//        self.view.addSubview(self.segmentView)
+        pageView.selectedIndex = 2
     }
     
     let titles = ["首页","我的","房地产","商业","","新闻","美丽中国","科技","工业","数据"]
@@ -48,7 +47,6 @@ class ViewController: UIViewController {
     
     lazy var segmentView: WJSegmentView = {
         let segmentView = WJSegmentView(items: self.items)
-        segmentView.selectedIndex = 2
         segmentView.backgroundColor = UIColor.lightGray
         return segmentView
     }()
@@ -69,7 +67,6 @@ class ViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-//        segmentView.frame = CGRect(origin: CGPoint(x: 0, y: 50), size: CGSize(width: self.view.bounds.width, height: segmentView.intrinsicContentSize.height))
         var frame = self.view.bounds
         frame.size.height -= 50
         frame.origin.y = 50

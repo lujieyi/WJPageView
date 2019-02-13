@@ -23,7 +23,7 @@ import UIKit
     var selectedIndex: Int = 0 {
         didSet {
             if selectedIndex>=0 && selectedIndex<self.items.count {
-                if oldValue > 0 && oldValue < self.items.count && (oldValue != selectedIndex) {
+                if oldValue >= 0 && oldValue < self.items.count && (oldValue != selectedIndex) {
                     self.items[oldValue].isSelected = false
                 }
                 self.items[selectedIndex].isSelected = true
@@ -127,7 +127,6 @@ extension WJSegmentView: UICollectionViewDelegateFlowLayout, UICollectionViewDat
     
     func setSelctedState(indexPath: IndexPath) {
         self.selectedIndex = indexPath.row
-        self.updateIndicatorPosition()
     }
     
     private func getItemSize(indexPath: IndexPath) -> CGSize {
@@ -136,12 +135,8 @@ extension WJSegmentView: UICollectionViewDelegateFlowLayout, UICollectionViewDat
         return itemSize
     }
     
-    private func updateIndicatorPosition() {
-//        let newX = self.selectedItem.convert(self.selectedItem.frame, to: self).minX + (self.selectedItem.frame.width - setting.indicatorSize.width)/2.0
-//        var newFrame = self.indicatorView.frame
-//        newFrame.origin.x = newX
-//        UIView.animate(withDuration: 0.3) {
-//            self.indicatorView.frame = newFrame
-//        }
+    func startIndicatorAnimation(offset: CGFloat, index: Int, isIndexIncreaze: Bool, pageWidth: CGFloat) {
+        print("\(index)")
     }
+
 }
