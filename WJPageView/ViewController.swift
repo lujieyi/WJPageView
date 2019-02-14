@@ -14,8 +14,10 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.addSubview(self.pageView)
-        pageView.selectedIndex = 2
+        self.addChild(self.pageViewController)
+        self.pageViewController.didMove(toParent: self)
+        self.view.addSubview(self.pageViewController.view)
+        pageViewController.selectedIndex = 2
     }
     
     let titles = ["首页","我的","房地产","商业","","新闻","美丽中国","科技","工业","数据"]
@@ -59,8 +61,8 @@ class ViewController: UIViewController {
         return views
     }()
     
-    lazy var pageView: WJPageView = {
-        let pageView = WJPageView(items: self.items, views: self.views)
+    lazy var pageViewController: WJPageViewController = {
+        let pageView = WJPageViewController(items: self.items, views: self.views)
         pageView.detailView.backgroundColor = UIColor.gray
         return pageView
     }()
@@ -70,7 +72,7 @@ class ViewController: UIViewController {
         var frame = self.view.bounds
         frame.size.height -= 50
         frame.origin.y = 50
-        self.pageView.frame = frame
+        self.pageViewController.view.frame = frame
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

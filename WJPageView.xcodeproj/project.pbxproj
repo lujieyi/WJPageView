@@ -13,7 +13,7 @@
 		603B1A712203E3B0007981AA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 603B1A702203E3B0007981AA /* Assets.xcassets */; };
 		603B1A742203E3B0007981AA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 603B1A722203E3B0007981AA /* LaunchScreen.storyboard */; };
 		603B1A812203E3F3007981AA /* UIColor+JM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603B1A7B2203E3F2007981AA /* UIColor+JM.swift */; };
-		603B1A822203E3F3007981AA /* WJPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603B1A7C2203E3F2007981AA /* WJPageView.swift */; };
+		603B1A822203E3F3007981AA /* WJPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603B1A7C2203E3F2007981AA /* WJPageViewController.swift */; };
 		603B1A842203E3F3007981AA /* SegmentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603B1A7E2203E3F3007981AA /* SegmentItem.swift */; };
 		603B1A852203E3F3007981AA /* WJButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603B1A7F2203E3F3007981AA /* WJButton.swift */; };
 		603B1A862203E3F3007981AA /* WJSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603B1A802203E3F3007981AA /* WJSegmentView.swift */; };
@@ -28,7 +28,7 @@
 		603B1A732203E3B0007981AA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		603B1A752203E3B0007981AA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		603B1A7B2203E3F2007981AA /* UIColor+JM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+JM.swift"; sourceTree = "<group>"; };
-		603B1A7C2203E3F2007981AA /* WJPageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WJPageView.swift; sourceTree = "<group>"; };
+		603B1A7C2203E3F2007981AA /* WJPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WJPageViewController.swift; sourceTree = "<group>"; };
 		603B1A7E2203E3F3007981AA /* SegmentItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentItem.swift; sourceTree = "<group>"; };
 		603B1A7F2203E3F3007981AA /* WJButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WJButton.swift; sourceTree = "<group>"; };
 		603B1A802203E3F3007981AA /* WJSegmentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WJSegmentView.swift; sourceTree = "<group>"; };
@@ -67,7 +67,7 @@
 				603B1A7E2203E3F3007981AA /* SegmentItem.swift */,
 				603B1A7B2203E3F2007981AA /* UIColor+JM.swift */,
 				603B1A7F2203E3F3007981AA /* WJButton.swift */,
-				603B1A7C2203E3F2007981AA /* WJPageView.swift */,
+				603B1A7C2203E3F2007981AA /* WJPageViewController.swift */,
 				603B1A802203E3F3007981AA /* WJSegmentView.swift */,
 				603B1A692203E3AE007981AA /* AppDelegate.swift */,
 				603B1A6B2203E3AE007981AA /* ViewController.swift */,
@@ -151,7 +151,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				603B1A842203E3F3007981AA /* SegmentItem.swift in Sources */,
-				603B1A822203E3F3007981AA /* WJPageView.swift in Sources */,
+				603B1A822203E3F3007981AA /* WJPageViewController.swift in Sources */,
 				603B1A6C2203E3AE007981AA /* ViewController.swift in Sources */,
 				603B1A812203E3F3007981AA /* UIColor+JM.swift in Sources */,
 				603B1A852203E3F3007981AA /* WJButton.swift in Sources */,
