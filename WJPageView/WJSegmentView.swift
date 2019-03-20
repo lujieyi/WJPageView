@@ -51,8 +51,9 @@ protocol JWSegmentViewDelegate {
     
     private(set) var selectedItem: SegmentItem!
     
-    /// 不使用DataSource初始化才会有东西
     private(set) var items = [SegmentItem]()
+    
+    private(set) var buttons = [WJButton]()
     
     private(set) lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView.init(frame: CGRect.zero, collectionViewLayout: self.flowLayout)
@@ -80,58 +81,77 @@ protocol JWSegmentViewDelegate {
 //        self.addSubview(self.collectionView)
 //    }
     
-    init(titles: [String]) {
-        super.init(frame: .zero)
-        var items = [SegmentItem]()
-        for title in titles {
-            let button = WJButton.intrinsicSizeButton(titlePosition: .left, padding: .zero, contentSpacing: 0)
-            button.setTitle(title, for: .normal)
-            items.append(SegmentItem(button: button, indicator: nil))
-        }
-        self.items = items
-        self.addSubview(self.collectionView)
-    }
+//    init(titles: [String]) {
+//        super.init(frame: .zero)
+//        var items = [SegmentItem]()
+//        for title in titles {
+//            let button = WJButton.intrinsicSizeButton(titlePosition: .left, padding: .zero, contentSpacing: 0)
+//            button.setTitle(title, for: .normal)
+//            items.append(SegmentItem(button: button, indicator: nil))
+//        }
+//        self.items = items
+//        self.addSubview(self.collectionView)
+//    }
     
     init(buttons: [WJButton]) {
         super.init(frame: .zero)
+        self.buttons = buttons
         var items = [SegmentItem]()
         for button in buttons {
-            items.append(SegmentItem(button: button, indicator: nil))
+            let item = SegmentItem(button: button, indicator: nil)
+//            item.direction = self.flowLayout.scrollDirection
+            items.append(item)
         }
         self.items = items
         self.addSubview(self.collectionView)
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-    }
+//    override init(frame: CGRect) {
+//        super.init(frame: frame)
+//    }
     
-    init(dataSource: WJSegmentViewDataSource) {
-        super.init(frame: .zero)
-        self.dataSource = dataSource;
-        self.addSubview(self.collectionView)
-    }
+//    init(dataSource: WJSegmentViewDataSource) {
+//        super.init(frame: .zero)
+//        self.dataSource = dataSource;
+//        self.addSubview(self.collectionView)
+//    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     override var intrinsicContentSize: CGSize {
-        var selfWidth: CGFloat = 0.0
-        var selfHeight: CGFloat = 0.0
-        var maxHeight: CGFloat = 0.0
-        var buttonWidth: CGFloat = 0.0
-        for item in self.items {
-            let intrinsicSize = item.intrinsicContentSize
-            buttonWidth = intrinsicSize.width
-            selfWidth += buttonWidth
-            maxHeight = maxHeight > intrinsicSize.height ? maxHeight : intrinsicSize.height
+        if self.flowLayout.scrollDirection == .horizontal {
+            var selfWidth: CGFloat = 0.0
+            var selfHeight: CGFloat = 0.0
+            var maxHeight: CGFloat = 0.0
+            var buttonWidth: CGFloat = 0.0
+            for item in self.items {
+                let intrinsicSize = item.intrinsicContentSize
+                buttonWidth = intrinsicSize.width
+                selfWidth += buttonWidth
+                maxHeight = maxHeight > intrinsicSize.height ? maxHeight : intrinsicSize.height
+            }
+            selfHeight = maxHeight
+            for item in self.items {
+                item.maxHeightOrWidth = maxHeight
+            }
+            return CGSize(width: selfWidth, height: selfHeight)
+        } else {
+            var selfWidth: CGFloat = 0.0
+            var selfHeight: CGFloat = 0.0
+            var maxWidth: CGFloat = 0.0
+            for item in self.items {
+                let intrinsicSize = item.intrinsicContentSize
+                selfHeight += intrinsicSize.height
+                maxWidth = maxWidth > intrinsicSize.width ? maxWidth : intrinsicSize.width
+            }
+            selfWidth = maxWidth
+            for item in self.items {
+                item.maxHeightOrWidth = maxWidth
+            }
+            return CGSize(width: selfWidth, height: selfHeight)
         }
-        selfHeight = maxHeight
-        for item in self.items {
-            item.maxHeight = maxHeight
-        }
-        return CGSize(width: selfWidth, height: selfHeight)
     }
     
     override func layoutSubviews() {
@@ -159,7 +179,13 @@ extension WJSegmentView: UICollectionViewDelegateFlowLayout, UICollectionViewDat
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return self.getItemSize(indexPath: indexPath)
+        if self.flowLayout.scrollDirection == .horizontal {
+            return self.getItemSize(indexPath: indexPath)
+        } else {
+            let height = self.getItemSize(indexPath: indexPath).height
+            let width = self.items[indexPath.row].maxHeightOrWidth
+            return CGSize(width: width, height: height)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -181,7 +207,12 @@ extension WJSegmentView: UICollectionViewDelegateFlowLayout, UICollectionViewDat
     
     private func getItemSize(indexPath: IndexPath) -> CGSize {
         let item = self.items[indexPath.row]
-        let itemSize = CGSize(width:item.intrinsicContentSize.width, height:item.maxHeight)
+        let itemSize: CGSize
+        if self.flowLayout.scrollDirection == .horizontal {
+            itemSize = CGSize(width:item.intrinsicContentSize.width, height:item.maxHeightOrWidth)
+        } else {
+            itemSize = CGSize(width:item.maxHeightOrWidth, height:item.intrinsicContentSize.height)
+        }
         return itemSize
     }
     

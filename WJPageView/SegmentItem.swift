@@ -12,6 +12,8 @@ import UIKit
     
     private(set) var button: WJButton
     
+    var direction: UICollectionView.ScrollDirection = .horizontal
+    
     var showDefaultIndicator: Bool = true {
         didSet {
             self.setNeedsLayout()
@@ -54,7 +56,7 @@ import UIKit
         }
     }
     
-    var maxHeight: CGFloat = 0 {
+    var maxHeightOrWidth: CGFloat = 0 {
         didSet {
             self.setNeedsLayout()
         }
@@ -82,13 +84,13 @@ import UIKit
     override func layoutSubviews() {
         super.layoutSubviews()
         var buttonSize = self.button.intrinsicContentSize
-        let maxButtonHeight = self.maxHeight-indicatorInset.top-self.indicatorSize().height-indicatorInset.bottom
+        let maxButtonHeight = self.maxHeightOrWidth-indicatorInset.top-self.indicatorSize().height-indicatorInset.bottom
         if buttonSize.height < maxButtonHeight {
             buttonSize = CGSize(width: buttonSize.width, height: maxButtonHeight)
         }
         let indicatorSize = self.indicatorSize()
         self.button.frame = CGRect(origin: .zero, size: buttonSize)
-        self.indicatorView.frame = CGRect(origin: CGPoint(x: (buttonSize.width-indicatorSize.width)/2.0+self.indicatorInset.left-self.indicatorInset.right, y: maxHeight-indicatorInset.bottom-indicatorSize.height), size: indicatorSize)
+        self.indicatorView.frame = CGRect(origin: CGPoint(x: (buttonSize.width-indicatorSize.width)/2.0+self.indicatorInset.left-self.indicatorInset.right, y: maxHeightOrWidth-indicatorInset.bottom-indicatorSize.height), size: indicatorSize)
         self.indicatorView.layer.cornerRadius = indicatorSize.height/2.0
     }
     

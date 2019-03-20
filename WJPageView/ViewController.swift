@@ -24,17 +24,20 @@ class ViewController: UIViewController {
         var items = [WJButton]()
         for title in self.titles {
             let button = WJButton.intrinsicSizeButton(titlePosition: .left, padding: .zero, contentSpacing: 0)
-            button.setTitle(title, for: .normal)
+            if title != "" {
+                button.setTitle(title, for: .normal)
+            }
             if title.count > 2{
                 button.setImage(UIImage(named: "sort-up"), for: .normal)
                 button.contentSpacing = 3
             } else if title.count == 0 {
                 button.setImage(UIImage(named: "sort-up"), for: .normal)
             }
+            button.titleLabel?.textAlignment = .right
             button.setTitleColor(UIColor.red, for: .normal)
             button.setTitleColor(UIColor.blue, for: .selected)
-            button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 0, right: 10)
-            button.isHighlighted = false
+            button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+//            button.isHighlighted = false
             button.isUserInteractionEnabled = false
 //            let item = SegmentItem(button: button, indicator: nil)
 //            item.indicatorView.backgroundColor = UIColor.blue
@@ -61,6 +64,8 @@ class ViewController: UIViewController {
     lazy var pageView: WJPageView = {
         let pageView = WJPageView(buttons: self.buttons, views: self.views)
         pageView.detailView.backgroundColor = UIColor.gray
+        pageView.flowLayout.scrollDirection = .vertical
+        pageView.segmentView?.flowLayout.scrollDirection = .vertical
         return pageView
     }()
     

@@ -19,9 +19,7 @@ class WJPageView: UIView {
         case increaze, decreaze, none
     }
     
-    var scrollDirection: UICollectionView.ScrollDirection = .horizontal
-    
-    var isJointed: Bool = false
+    var isDetached: Bool = false
 
     var selectedIndex: Int = 0 {
         didSet {
@@ -32,7 +30,7 @@ class WJPageView: UIView {
     
     private let detailViewCellReuseID = "detailViewCellReuseID"
     
-    private(set) var views: [UIView]
+    private(set) var views = [UIView]()
     
     private(set) var segmentView: WJSegmentView?
     
@@ -51,7 +49,7 @@ class WJPageView: UIView {
         let flowLayout = UICollectionViewFlowLayout.init()
         flowLayout.minimumLineSpacing = 20
         flowLayout.minimumInteritemSpacing = 20
-        flowLayout.scrollDirection = self.scrollDirection
+        flowLayout.scrollDirection = .horizontal
         return flowLayout
     }()
 
@@ -62,11 +60,17 @@ class WJPageView: UIView {
         self.setupPageView(segmentView: segmentView, views: views)
     }
     
-    init(disjointedSegmentView: WJSegmentView, views: [UIView]) {
+    init(views: [UIView]) {
         self.views = views
         super.init(frame: .zero)
-        self.isJointed = true
-        self.setupPageView(segmentView: disjointedSegmentView, views: views)
+        self.addSubview(self.detailView)
+    }
+    
+    init(detachedSegmentView: WJSegmentView, views: [UIView]) {
+        self.views = views
+        super.init(frame: .zero)
+        self.isDetached = true
+        self.setupPageView(segmentView: detachedSegmentView, views: views)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -74,25 +78,25 @@ class WJPageView: UIView {
     }
     
     private func setupPageView(segmentView: WJSegmentView, views: [UIView]) {
-        assert(segmentView.items.count == views.count && segmentView.items.count != 0, "titles.count != viewControllers.count 或者 titles.count == 0")
+        assert(segmentView.buttons.count == views.count && segmentView.buttons.count != 0 && views.count != 0, "segmentView数和Views数量不等，或者为空")
         self.segmentView = segmentView
-        self.segmentView!.flowLayout.scrollDirection = self.scrollDirection
+//        self.segmentView!.flowLayout.scrollDirection = self.scrollDirection
         self.addSubview(self.detailView)
         self.addSubview(self.segmentView!)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        if self.isJointed {
+        if self.isDetached || self.segmentView == nil {
             self.detailView.frame = self.bounds
         } else {
-            if self.scrollDirection == .horizontal {
+            if self.flowLayout.scrollDirection == .horizontal {
                 self.segmentView?.frame = CGRect(origin: .zero, size: CGSize(width: self.bounds.width, height: (self.segmentView?.intrinsicContentSize.height ?? 0)))
                 let size = CGSize(width: self.bounds.width, height: self.bounds.height-(self.segmentView?.frame.height ?? 0))
                 self.flowLayout.itemSize = size
                 self.detailView.frame = CGRect(origin: CGPoint(x: 0, y: (self.segmentView?.frame.height ?? 0)), size: size)
             } else {
-                //                self.segmentView?.frame = CGRect(origin: .zero, size: CGSize(width: (self.segmentView?.intrinsicContentSize.width ?? 0), height: self.bounds.height))
+                self.segmentView?.frame = CGRect(origin: .zero, size: CGSize(width: (self.segmentView?.intrinsicContentSize.width ?? 0), height: self.bounds.height))
                 let size = CGSize(width: self.bounds.width-(self.segmentView?.frame.width ?? 0), height: self.bounds.height)
                 self.flowLayout.itemSize = size
                 self.detailView.frame = CGRect(origin: CGPoint(x: self.segmentView?.frame.width ?? 0, y: 0), size: size)
@@ -145,7 +149,7 @@ extension WJPageView: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if self.segmentView == nil {return}
-        if self.scrollDirection == .horizontal {
+        if self.flowLayout.scrollDirection == .horizontal {
             let offsetX = scrollView.contentOffset.x
             let detailViewWidth = self.detailView.bounds.width
             let defaultFrame: CGRect?
