@@ -14,22 +14,19 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.addChild(self.pageViewController)
-        self.pageViewController.didMove(toParent: self)
-        self.view.addSubview(self.pageViewController.view)
-        pageViewController.selectedIndex = 2
+        self.view.addSubview(self.pageView)
+        pageView.selectedIndex = 2
     }
     
     let titles = ["首页","我的","房地产","商业","","新闻","美丽中国","科技","工业","数据"]
     
-    lazy var items: [SegmentItem] = {
-        var items = [SegmentItem]()
+    lazy var buttons: [WJButton] = {
+        var items = [WJButton]()
         for title in self.titles {
-            let button = WJButton(titlePosition: .bottom, contentSpacing: 0)
+            let button = WJButton.intrinsicSizeButton(titlePosition: .left, padding: .zero, contentSpacing: 0)
             button.setTitle(title, for: .normal)
             if title.count > 2{
                 button.setImage(UIImage(named: "sort-up"), for: .normal)
-                button.position = .left
                 button.contentSpacing = 3
             } else if title.count == 0 {
                 button.setImage(UIImage(named: "sort-up"), for: .normal)
@@ -39,16 +36,16 @@ class ViewController: UIViewController {
             button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 0, right: 10)
             button.isHighlighted = false
             button.isUserInteractionEnabled = false
-            let item = SegmentItem(button: button, indicator: nil)
-            item.indicatorView.backgroundColor = UIColor.blue
-            item.indicatorInset = UIEdgeInsets(top: 2, left: 0, bottom: 1, right: 0)
-            items.append(item)
+//            let item = SegmentItem(button: button, indicator: nil)
+//            item.indicatorView.backgroundColor = UIColor.blue
+//            item.indicatorInset = UIEdgeInsets(top: 2, left: 0, bottom: 1, right: 0)
+            items.append(button)
         }
         return items
     }()
     
     lazy var segmentView: WJSegmentView = {
-        let segmentView = WJSegmentView(items: self.items)
+        let segmentView = WJSegmentView(buttons: self.buttons)
         segmentView.backgroundColor = UIColor.lightGray
         return segmentView
     }()
@@ -61,8 +58,8 @@ class ViewController: UIViewController {
         return views
     }()
     
-    lazy var pageViewController: WJPageViewController = {
-        let pageView = WJPageViewController(items: self.items, views: self.views)
+    lazy var pageView: WJPageView = {
+        let pageView = WJPageView(buttons: self.buttons, views: self.views)
         pageView.detailView.backgroundColor = UIColor.gray
         return pageView
     }()
@@ -72,7 +69,7 @@ class ViewController: UIViewController {
         var frame = self.view.bounds
         frame.size.height -= 50
         frame.origin.y = 50
-        self.pageViewController.view.frame = frame
+        self.pageView.frame = frame
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

@@ -8,6 +8,20 @@
 
 import UIKit
 
+@objc protocol WJSegmentViewDataSource {
+    func WJSegmentView(numberOfSectionsInNumberOfSectionsIn segmentView: WJSegmentView) -> NSInteger
+    func WJSegmentView(segmentView: WJSegmentView, numberOfRowsInSection section: NSInteger)
+    func WJSegmentView(segmentView: WJSegmentView, sizeForItemAtIndexPath indexPath: NSIndexPath)
+    @objc optional func indicatorViewInWJSegmentView(segmentView: WJSegmentView) -> UIView
+    @objc optional func indicatorSizeInWJSegmentView(segmentView: WJSegmentView) -> CGSize
+}
+
+protocol JWSegmentViewDelegate {
+    func WJSegmentViewShouldSelectedItem(atIndexPath indexPath: NSIndexPath, segmentView: WJSegmentView)
+    func WJSegmentViewDidSelectedItem(atIndexPath indexPath: NSIndexPath, segmentView: WJSegmentView)
+    func WJSegmentView()
+}
+
 
 @objcMembers class WJSegmentView: UIView {
     
@@ -20,6 +34,9 @@ import UIKit
     
 //    var itemsAlignLeft: Bool = true
     
+    weak var dataSource: AnyObject?
+    
+    /// 当前选中的index，可修改
     var selectedIndex: Int = 0 {
         didSet {
             if selectedIndex>=0 && selectedIndex<self.items.count {
@@ -34,7 +51,8 @@ import UIKit
     
     private(set) var selectedItem: SegmentItem!
     
-    private(set) var items: [SegmentItem]!
+    /// 不使用DataSource初始化才会有东西
+    private(set) var items = [SegmentItem]()
     
     private(set) lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView.init(frame: CGRect.zero, collectionViewLayout: self.flowLayout)
@@ -56,9 +74,41 @@ import UIKit
         return flowLayout
     }()
     
-    init(items: [SegmentItem]) {
+//    init(items: [SegmentItem]) {
+//        super.init(frame: .zero)
+//        self.items = items
+//        self.addSubview(self.collectionView)
+//    }
+    
+    init(titles: [String]) {
         super.init(frame: .zero)
+        var items = [SegmentItem]()
+        for title in titles {
+            let button = WJButton.intrinsicSizeButton(titlePosition: .left, padding: .zero, contentSpacing: 0)
+            button.setTitle(title, for: .normal)
+            items.append(SegmentItem(button: button, indicator: nil))
+        }
         self.items = items
+        self.addSubview(self.collectionView)
+    }
+    
+    init(buttons: [WJButton]) {
+        super.init(frame: .zero)
+        var items = [SegmentItem]()
+        for button in buttons {
+            items.append(SegmentItem(button: button, indicator: nil))
+        }
+        self.items = items
+        self.addSubview(self.collectionView)
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    init(dataSource: WJSegmentViewDataSource) {
+        super.init(frame: .zero)
+        self.dataSource = dataSource;
         self.addSubview(self.collectionView)
     }
     

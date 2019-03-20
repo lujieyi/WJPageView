@@ -13,7 +13,7 @@ protocol WJPageViewControllerDatasource {
     func viewControllerForIndex(index: UInt) -> UIViewController
 }
 
-class WJPageViewController: UIViewController {
+class WJPageView: UIView {
     
     enum ScrollingDirection {
         case increaze, decreaze, none
@@ -55,16 +55,16 @@ class WJPageViewController: UIViewController {
         return flowLayout
     }()
 
-    init(items: [SegmentItem], views: [UIView]) {
+    init(buttons: [WJButton], views: [UIView]) {
         self.views = views
-        super.init(nibName: nil, bundle: nil)
-        let segmentView = WJSegmentView(items: items)
+        super.init(frame: .zero)
+        let segmentView = WJSegmentView(buttons: buttons)
         self.setupPageView(segmentView: segmentView, views: views)
     }
     
     init(disjointedSegmentView: WJSegmentView, views: [UIView]) {
         self.views = views
-        super.init(nibName: nil, bundle: nil)
+        super.init(frame: .zero)
         self.isJointed = true
         self.setupPageView(segmentView: disjointedSegmentView, views: views)
     }
@@ -77,23 +77,23 @@ class WJPageViewController: UIViewController {
         assert(segmentView.items.count == views.count && segmentView.items.count != 0, "titles.count != viewControllers.count 或者 titles.count == 0")
         self.segmentView = segmentView
         self.segmentView!.flowLayout.scrollDirection = self.scrollDirection
-        self.view.addSubview(self.detailView)
-        self.view.addSubview(self.segmentView!)
+        self.addSubview(self.detailView)
+        self.addSubview(self.segmentView!)
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    override func layoutSubviews() {
+        super.layoutSubviews()
         if self.isJointed {
-            self.detailView.frame = view.bounds
+            self.detailView.frame = self.bounds
         } else {
             if self.scrollDirection == .horizontal {
-                self.segmentView?.frame = CGRect(origin: .zero, size: CGSize(width: view.bounds.width, height: (self.segmentView?.intrinsicContentSize.height ?? 0)))
-                let size = CGSize(width: view.bounds.width, height: view.bounds.height-(self.segmentView?.frame.height ?? 0))
+                self.segmentView?.frame = CGRect(origin: .zero, size: CGSize(width: self.bounds.width, height: (self.segmentView?.intrinsicContentSize.height ?? 0)))
+                let size = CGSize(width: self.bounds.width, height: self.bounds.height-(self.segmentView?.frame.height ?? 0))
                 self.flowLayout.itemSize = size
                 self.detailView.frame = CGRect(origin: CGPoint(x: 0, y: (self.segmentView?.frame.height ?? 0)), size: size)
             } else {
                 //                self.segmentView?.frame = CGRect(origin: .zero, size: CGSize(width: (self.segmentView?.intrinsicContentSize.width ?? 0), height: self.bounds.height))
-                let size = CGSize(width: view.bounds.width-(self.segmentView?.frame.width ?? 0), height: view.bounds.height)
+                let size = CGSize(width: self.bounds.width-(self.segmentView?.frame.width ?? 0), height: self.bounds.height)
                 self.flowLayout.itemSize = size
                 self.detailView.frame = CGRect(origin: CGPoint(x: self.segmentView?.frame.width ?? 0, y: 0), size: size)
             }
@@ -115,7 +115,7 @@ class WJPageViewController: UIViewController {
     private var indicatorMidFrame: CGRect?
 }
 
-extension WJPageViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension WJPageView: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return views.count
@@ -169,8 +169,8 @@ extension WJPageViewController: UICollectionViewDataSource, UICollectionViewDele
                     //往右滑
                     let index = Int(offsetX/detailViewWidth)
                     if index == self.segmentView!.items.count - 1 {return}
-                    let startItem = self.segmentView!.items![index]
-                    let toItem = self.segmentView!.items![index+1]
+                    let startItem = self.segmentView!.items[index]
+                    let toItem = self.segmentView!.items[index+1]
                     if toItem.window == nil || startItem.window == nil {return}
                     let startFrame = startItem.convert(startItem.indicatorView.frame, to: self.segmentView!.collectionView)
                     let toFrame = toItem.convert(toItem.indicatorView.frame, to: self.segmentView!.collectionView)
@@ -192,8 +192,8 @@ extension WJPageViewController: UICollectionViewDataSource, UICollectionViewDele
                     //往左滑
                     let index = Int(offsetX/detailViewWidth) + 1
                     if offsetX < 0 || index > self.segmentView!.items.count - 1 {return}
-                    let startItem = self.segmentView!.items![index]
-                    let toItem = self.segmentView!.items![index-1]
+                    let startItem = self.segmentView!.items[index]
+                    let toItem = self.segmentView!.items[index-1]
                     if toItem.window == nil || startItem.window == nil {return}
                     let startFrame = startItem.convert(startItem.indicatorView.frame, to: self.segmentView!.collectionView)
                     let toFrame = toItem.convert(toItem.indicatorView.frame, to: self.segmentView!.collectionView)

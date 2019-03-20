@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objcMembers class SegmentItem: UIView {
+@objcMembers class SegmentItem: UICollectionViewCell {
     
     private(set) var button: WJButton
     
@@ -44,7 +44,7 @@ import UIKit
         }
     }
     
-    var isSelected: Bool {
+    override var isSelected: Bool {
         get {
             return self.button.isSelected
         }
