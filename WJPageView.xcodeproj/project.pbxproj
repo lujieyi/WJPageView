@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6006B2AB22423A6E004C0464 /* WJPageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6006B2AA22423A6E004C0464 /* WJPageDetailView.swift */; };
 		603B1A6A2203E3AE007981AA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603B1A692203E3AE007981AA /* AppDelegate.swift */; };
 		603B1A6C2203E3AE007981AA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603B1A6B2203E3AE007981AA /* ViewController.swift */; };
 		603B1A6F2203E3AE007981AA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 603B1A6D2203E3AE007981AA /* Main.storyboard */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6006B2AA22423A6E004C0464 /* WJPageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WJPageDetailView.swift; sourceTree = "<group>"; };
 		603B1A662203E3AE007981AA /* WJPageView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WJPageView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		603B1A692203E3AE007981AA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		603B1A6B2203E3AE007981AA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -69,6 +71,7 @@
 				603B1A7F2203E3F3007981AA /* WJButton.swift */,
 				603B1A7C2203E3F2007981AA /* WJPageView.swift */,
 				603B1A802203E3F3007981AA /* WJSegmentView.swift */,
+				6006B2AA22423A6E004C0464 /* WJPageDetailView.swift */,
 				603B1A692203E3AE007981AA /* AppDelegate.swift */,
 				603B1A6B2203E3AE007981AA /* ViewController.swift */,
 				603B1A6D2203E3AE007981AA /* Main.storyboard */,
@@ -155,6 +158,7 @@
 				603B1A6C2203E3AE007981AA /* ViewController.swift in Sources */,
 				603B1A812203E3F3007981AA /* UIColor+JM.swift in Sources */,
 				603B1A852203E3F3007981AA /* WJButton.swift in Sources */,
+				6006B2AB22423A6E004C0464 /* WJPageDetailView.swift in Sources */,
 				603B1A862203E3F3007981AA /* WJSegmentView.swift in Sources */,
 				603B1A6A2203E3AE007981AA /* AppDelegate.swift in Sources */,
 			);

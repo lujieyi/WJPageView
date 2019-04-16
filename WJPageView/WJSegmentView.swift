@@ -36,6 +36,8 @@ protocol JWSegmentViewDelegate {
     
     weak var dataSource: AnyObject?
     
+    private(set) weak var pageView: WJPageView!
+    
     /// 当前选中的index，可修改
     var selectedIndex: Int = 0 {
         didSet {
@@ -106,6 +108,18 @@ protocol JWSegmentViewDelegate {
         self.addSubview(self.collectionView)
     }
     
+    init(flowLayout: UICollectionViewFlowLayout, pageView: WJPageView) {
+        super.init(frame: .zero)
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        self.collectionView = collectionView
+        self.pageView = pageView
+        
+        collectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
+        collectionView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+        collectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
+        collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
+    }
+    
 //    override init(frame: CGRect) {
 //        super.init(frame: frame)
 //    }
@@ -160,6 +174,17 @@ protocol JWSegmentViewDelegate {
     }
     
     private let WJSegmentItemReUsedID = "WJSegmentItemReUsedID"
+    
+    private lazy var cloneIndicator: UIImageView = {
+        let indicator = UIImageView()
+        let defaultIndicator = self.segmentView?.selectedItem.indicatorView
+        indicator.image = defaultIndicator?.image
+        indicator.layer.masksToBounds = true
+        indicator.layer.cornerRadius = defaultIndicator?.layer.cornerRadius ?? 0
+        indicator.backgroundColor = defaultIndicator?.backgroundColor
+        self.segmentView?.collectionView.addSubview(indicator)
+        return indicator
+    }()
     
 }
 
